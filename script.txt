@@ -1,0 +1,123 @@
+DROP DATABASE IF EXISTS restaurant;
+CREATE DATABASE restaurant;
+USE restaurant;
+
+# restaurant
+CREATE TABLE Restaurant (
+    RestaurantName			 VARCHAR(50) NOT NULL,
+    URL 					 VARCHAR(50) NOT NULL,
+    Address 				 VARCHAR(50) NOT NULL,
+    PRIMARY KEY(RestaurantName)
+);
+
+# employee
+CREATE TABLE Employee(
+	ID 						 INT NOT NULL,
+	firstName 				 VARCHAR(50) NOT NULL,
+	lastName 				 VARCHAR(50) NOT NULL,
+    restaurantName 			 VARCHAR(50) NOT NULL,
+    employeeType			 VARCHAR(50) NOT NULL,
+	PRIMARY KEY (ID)
+);
+
+# customer account 
+CREATE TABLE customerAccount (
+  customer_id 				INT NOT NULL,
+  first_name 				VARCHAR(50) NOT NULL,
+  last_name 				VARCHAR(50) NOT NULL,
+  credit 					DECIMAL(10,2) DEFAULT 5.00,
+  PRIMARY KEY(customer_id)
+);
+
+# delivery persons
+CREATE TABLE delivery_people (
+  delivery_person_id 		INT NOT NULL,
+  delivery_first_name 		VARCHAR(50) NOT NULL,
+  delivery_last_name		VARCHAR(50) NOT NULL,
+  PRIMARY KEY(delivery_person_id)
+);
+
+# chefs
+CREATE TABLE chefs (
+  chef_id 					INT NOT NULL,
+  chef_first_name 			VARCHAR(50) NOT NULL,
+  chef_last_name			VARCHAR(50) NOT NULL,
+  PRIMARY KEY (chef_id)
+);
+
+# managers
+CREATE TABLE managers (
+  manager_id 				INT NOT NULL,
+  manager_first_name 		VARCHAR(50) NOT NULL,
+  manager_last_name			VARCHAR(50) NOT NULL,
+  PRIMARY KEY(manager_id)
+);
+
+# servers
+CREATE TABLE servers (
+  server_id 				INT NOT NULL,
+  server_first_name 		VARCHAR(50) NOT NULL,
+  server_last_name			VARCHAR(50) NOT NULL,
+  PRIMARY KEY(server_id)
+);
+
+# order items
+CREATE TABLE items (
+  item_id             		INT NOT NULL,
+  item_name           		VARCHAR(50) NOT NULL,
+  PRIMARY KEY(item_id)
+);
+
+# customer orders
+CREATE TABLE orders (
+  order_id 					INT NOT NULL,
+  customer_id 				INT NOT NULL,
+  item_id					INT NOT NULL,
+  order_date 				DATE NOT NULL,
+  total_amount 				DECIMAL(10,2) NOT NULL,
+  tip 						DECIMAL(5,2) NOT NULL,
+  delivery_person_id 		INT NOT NULL,
+  PRIMARY KEY(order_id),
+  FOREIGN KEY(item_id) REFERENCES items(item_id) ON DELETE CASCADE,
+  FOREIGN KEY (customer_id) REFERENCES customerAccount(customer_id) ON DELETE CASCADE,
+  FOREIGN KEY (delivery_person_id) REFERENCES delivery_people(delivery_person_id) ON DELETE CASCADE
+);
+
+CREATE TABLE shift (
+  empID 					INT NOT NULL,
+  day 						VARCHAR(50) NOT NULL,
+  startTime 				TIME NOT NULL,
+  endTime 					TIME NOT NULL,
+  PRIMARY KEY (empID, day),
+  FOREIGN KEY (empID) REFERENCES employee(ID) ON DELETE CASCADE
+);
+
+INSERT INTO customerAccount VALUES("123456", "Jane", "Doe", "5");
+INSERT INTO delivery_people VALUES("654321", "Tony", "Stark");
+INSERT INTO items VALUES("56", "Pizza");
+INSERT INTO orders VALUES("987", "123456", "56", "2023-04-04", "20", "2", "654321");
+
+INSERT INTO customerAccount VALUES("111111", "Bob", "Katz", "5");
+INSERT INTO items VALUES("98", "Hot Dog");
+INSERT INTO orders VALUES("654", "111111", "98", "2023-04-04", "7", "1", "654321");
+
+INSERT INTO Employee VALUES("333333", "Tony", "Stark", "Restaurant", "Delivery Person");
+INSERT INTO Employee VALUES("444444", "Bob", "Marley", "Restaurant", "Chef");
+INSERT INTO Employee VALUES("555555", "Neil", "Armstrong", "Restaurant", "Server");
+INSERT INTO Employee VALUES("666666", "Lionel", "Messi", "Restaurant", "Manager");
+
+INSERT INTO shift VALUES("333333", "Monday", "15:30:00", "18:30:00");
+INSERT INTO shift VALUES("333333", "Tuesday", "9:00:00", "12:00:00");
+INSERT INTO shift VALUES("333333", "Wednesday", "14:30:00", "19:30:00");
+
+INSERT INTO shift VALUES("444444", "Thursday", "15:30:00", "18:30:00");
+INSERT INTO shift VALUES("444444", "Friday", "9:00:00", "12:00:00");
+INSERT INTO shift VALUES("444444", "Saturday", "14:30:00", "19:30:00");
+
+INSERT INTO shift VALUES("555555", "Monday", "15:30:00", "18:30:00");
+INSERT INTO shift VALUES("555555", "Tuesday", "9:00:00", "12:00:00");
+INSERT INTO shift VALUES("555555", "Thursday", "14:30:00", "19:30:00");
+
+INSERT INTO shift VALUES("666666", "Tuesday", "15:30:00", "18:30:00");
+INSERT INTO shift VALUES("666666", "Friday", "9:00:00", "12:00:00");
+INSERT INTO shift VALUES("666666", "Sunday", "14:30:00", "19:30:00");
